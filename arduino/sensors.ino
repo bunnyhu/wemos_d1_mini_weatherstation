@@ -134,7 +134,7 @@ void calculateWind() {
   }
 
   // speed 
-  stationWindSpeed = (int) tx20Speed / tx20SpeedIndex;
+  stationWindSpeed = (int) ((tx20Speed / tx20SpeedIndex) / 10 );
   stationWindGust = tx20Gust;
   
   TX20ValidData = true;
