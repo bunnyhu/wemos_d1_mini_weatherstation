@@ -19,6 +19,7 @@ void readDHT() {
   String message = "";
   int h = round(dht.readHumidity());
   int t = round(dht.readTemperature());
+  
 
   if (isnan(h) || isnan(t) ) {
     Serial.println("Failed to read from DHT sensor!");
@@ -119,24 +120,31 @@ void resetTX20() {
 /**
  * Calculate the most specific wind data from last period
  */
-void calculateWind() {     
+void calculateWind() { 
+  stationWindSpeed = 0;
+  stationWindGust = 0;
+  stationWindDirection = 0;
+  stationWindDirectionName = windDirectionNameEn[stationWindDirection];
+  TX20ValidData = false;
+  
   if (tx20SpeedIndex <= 0) {
     return;    
   }  
-  // direction
-  int specific = 0;
-  for (int f=0; f<16; f++) {
-    if (tx20Direction[f]>=specific) {
-      specific = tx20Direction[f];
-      stationWindDirection = f;    
-      stationWindDirectionName = windDirectionNameEn[stationWindDirection];
-    }
-  }
-
   // speed 
   stationWindSpeed = (int) ((tx20Speed / tx20SpeedIndex) / 10 );
-  stationWindGust = tx20Gust / 10;
-  
+  stationWindGust = (int) (tx20Gust / 10);
+
+  if ((stationWindSpeed > 0) || (stationWindGust > 0)) {
+    // direction
+    int specific = 0;
+    for (int f=0; f<16; f++) {
+      if (tx20Direction[f]>=specific) {
+        specific = tx20Direction[f];
+        stationWindDirection = f;    
+        stationWindDirectionName = windDirectionNameEn[stationWindDirection];
+      }
+    }    
+  }  
   TX20ValidData = true;
 }
 

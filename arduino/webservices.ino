@@ -35,6 +35,9 @@ String jsonOutput() {
   j += "\"pressure\":";
   j += stationPressure;
   j+="\n";
+  j += "\"dewpoint\":";
+  j += dewPointFast(stationTemp, stationHumidity);
+  j+="\n";
   
   j+="}\n";
   return j;
@@ -209,6 +212,8 @@ void sendWunderground() {
   }
   postData += "&humidity=";
   postData += stationHumidity;
+  postData += "&dewptf=";
+  postData += dht.convertCtoF(dewPointFast(stationTemp, stationHumidity));  
   postData += "&tempf=";
   postData += dht.convertCtoF(stationTemp);
   postData += "&baromin=";
