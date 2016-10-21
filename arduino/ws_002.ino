@@ -111,6 +111,47 @@ boolean timerOverflow() {
 }
 
 /**
+ * Set wifi connection
+ */
+void setWifiConnection() {
+  byte available_networks = 0;
+  byte foundSsid = false;
+  
+  do {    
+    Serial.println("Searching routers");
+    do {
+      available_networks = WiFi.scanNetworks();      
+      if (available_networks == 0) { 
+        Serial.print("."); 
+        delay(1000); 
+      }
+    } while (available_networks == 0);
+    
+    if (available_networks>0) {
+      foundSsid = false;
+      Serial.println("Wifi connections available");
+      for (int network = 0; network < available_networks; network++) {
+        for (int f = 0; f<wifi_ssid_max; f++) {
+          if (WiFi.SSID(network) == wifi_ssid[f][0]) {
+            Serial.print("Found ");  
+            Serial.println(wifi_ssid[f][0]);  
+            WiFi.begin(wifi_ssid[f][0], wifi_ssid[f][1]);        
+            network = available_networks;
+            foundSsid = true;
+          }
+        }
+      }
+      byte wifiCounter = 30;
+      while ((foundSsid == true) && (WiFi.status() != WL_CONNECTED) && ( wifiCounter > 0)) {
+        wifiCounter --;
+        delay(500);
+        Serial.print(".");
+      }
+    }  
+  } while (WiFi.status() != WL_CONNECTED);  
+}
+
+/**
  * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   SYSTEM SETUP
  */
 void setup(void){
@@ -125,25 +166,8 @@ void setup(void){
   Serial.println("");
   digitalWrite(LED, 0);
 
-  byte available_networks = WiFi.scanNetworks();
-  if (available_networks>0) {
-    Serial.println("Wifi connections available");
-    for (int network = 0; network < available_networks; network++) {
-      for (int f = 0; f<wifi_ssid_max; f++) {
-        if (WiFi.SSID(network) == wifi_ssid[f][0]) {
-          Serial.print("Found ");  
-          Serial.println(wifi_ssid[f][0]);  
-          WiFi.begin(wifi_ssid[f][0], wifi_ssid[f][1]);        
-          network = available_networks;
-        }
-      }
-    }    
-  }  
-  
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
+  setWifiConnection();
+   
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(WiFi.SSID());
@@ -196,7 +220,10 @@ void loop(void){
   server.handleClient();  
   unsigned long currentMillis = millis();
 
-  if (timerOverflow()) {   
+  if (timerOverflow()) {
+    if (WiFi.status() != WL_CONNECTED) {
+      setWifiConnection();
+    }
     stationMillis = currentMillis;
     readDHT();
     readBME();    
