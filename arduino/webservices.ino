@@ -11,6 +11,9 @@ String jsonOutput() {
   j += "\"millis\":";
   j += stationMillis;
   j+=",\n"; 
+  j += "\"stationId\":\"";
+  j += stationID;
+  j+="\",\n"; 
   j += "\"windDirection\":";
   j += stationWindDirection;
   j+=",\n"; 
@@ -34,11 +37,10 @@ String jsonOutput() {
   j+=",\n";
   j += "\"pressure\":";
   j += stationPressure;
-  j+="\n";
+  j+=",\n";
   j += "\"dewpoint\":";
-  j += dewPointFast(stationTemp, stationHumidity);
-  j+="\n";
-  
+  j += dewPoint(stationTemp, stationHumidity);
+  j+="\n";  
   j+="}\n";
   return j;
 }
@@ -213,7 +215,7 @@ void sendWunderground() {
   postData += "&humidity=";
   postData += stationHumidity;
   postData += "&dewptf=";
-  postData += dht.convertCtoF(dewPointFast(stationTemp, stationHumidity));  
+  postData += dht.convertCtoF(dewPoint(stationTemp, stationHumidity));  
   postData += "&tempf=";
   postData += dht.convertCtoF(stationTemp);
   postData += "&baromin=";

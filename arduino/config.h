@@ -21,3 +21,4 @@ const String wg_station_id = "YOUR_STATION_ID";
 const String wg_station_key = "station_key";
 
 const String privateAjaxUrl = "http://yourwebsite/wemosdatagate.php";
+const String stationID = "any_id_text"; 
