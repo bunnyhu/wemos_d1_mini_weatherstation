@@ -131,8 +131,8 @@ void calculateWind() {
     return;    
   }  
   // speed 
-  stationWindSpeed = (int) ((tx20Speed / tx20SpeedIndex) / 10 );
-  stationWindGust = (int) (tx20Gust / 10);
+  stationWindSpeed = (tx20Speed / tx20SpeedIndex) / 10 ;
+  stationWindGust = tx20Gust / 10;
 
   if ((stationWindSpeed > 0) || (stationWindGust > 0)) {
     // direction

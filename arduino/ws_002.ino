@@ -9,8 +9,8 @@
  * Techno Line Tx20
  * 
  * @author Karoly Szabo - Bunny
- * @version 1.0
- * @release 2016. aug. 1.
+ * @version 1.1
+ * @release 2018. oct 03.
  * 
 */
 
@@ -47,8 +47,8 @@ const String windDirectionNameEn[] = {"N","NNE","NE","ENE","E","ESE","SE","SSE",
 volatile boolean TX20IncomingData = false;  // flag. If true, TX20 sending binary data. Turn on by interrupt method.
 boolean TX20ValidData = false; // There is valid TX20 data
 int tx20Direction[16];    // array to store directions between two internet data push
-int tx20Speed;            // incremented wind speed. Need to divide with tx20SpeedIndex for average speed
-int tx20Gust;             // highest wind speed
+float tx20Speed;            // incremented wind speed. Need to divide with tx20SpeedIndex for average speed
+float tx20Gust;             // highest wind speed
 int tx20SpeedIndex = -1;  // how mutch wind speed data incremented in tx20Speed.
 
 // Global variables
@@ -60,14 +60,14 @@ unsigned int sc,sf, pin;    // TX20 temp var
 String tx20RawDataS = "";   // TX20 binary data in string format for debugging
 
 // The last weather information from the sensors
-int stationTemp = 0;
-int stationHeatIndex = 0;
-int stationHumidity = 0;
+float stationTemp = 0;
+float stationHeatIndex = 0;
+float stationHumidity = 0;
 float stationPressure = 0;
 int stationWindDirection = 0;
 String stationWindDirectionName = "";
-int stationWindSpeed = 0;
-int stationWindGust = 0;
+float stationWindSpeed = 0;
+float stationWindGust = 0;
 
 unsigned long stationMillis = 0;  // timestamp for json data
 
